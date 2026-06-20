@@ -1,0 +1,205 @@
+/* ============================================================
+   ONVSHARK TOASTIFY
+   Author  : Refael Sinaga 2026 | refaelsinaga.com
+   Version : 1.0.0
+   Prefix  : onvs-
+   ============================================================ */
+
+/* ── container per posisi ── */
+.onvs-toast-container {
+    position: fixed;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+    width: 360px;
+}
+
+.onvs-toast-pos-top_left    { top: 20px; left: 20px; }
+.onvs-toast-pos-top_center  { top: 20px; left: 50%; transform: translateX(-50%); }
+.onvs-toast-pos-top_right   { top: 20px; right: 20px; }
+
+.onvs-toast-pos-bottom_left   { bottom: 20px; left: 20px;  flex-direction: column-reverse; }
+.onvs-toast-pos-bottom_center { bottom: 20px; left: 50%; transform: translateX(-50%); flex-direction: column-reverse; }
+.onvs-toast-pos-bottom_right  { bottom: 20px; right: 20px; flex-direction: column-reverse; }
+
+.onvs-toast-pos-middle {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ── toast item ── */
+.onvs-toast {
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    border: 1.5px solid transparent;
+    box-shadow: 0 4px 6px rgba(0,0,0,.06), 0 10px 28px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.04);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 15px 16px;
+    pointer-events: all;
+    position: relative;
+    overflow: hidden;
+}
+
+.onvs-toast.onvs-toast-has-sub {
+    align-items: flex-start;
+}
+
+/* ── animasi per posisi ── */
+.onvs-toast-pos-top_right    .onvs-toast,
+.onvs-toast-pos-bottom_right .onvs-toast  { animation: onvsToastFromRight .28s ease-out; }
+.onvs-toast-pos-top_right    .onvs-toast.onvs-toast-closing,
+.onvs-toast-pos-bottom_right .onvs-toast.onvs-toast-closing { animation: onvsToastToRight .22s ease-in forwards; }
+
+.onvs-toast-pos-top_left    .onvs-toast,
+.onvs-toast-pos-bottom_left .onvs-toast  { animation: onvsToastFromLeft .28s ease-out; }
+.onvs-toast-pos-top_left    .onvs-toast.onvs-toast-closing,
+.onvs-toast-pos-bottom_left .onvs-toast.onvs-toast-closing { animation: onvsToastToLeft .22s ease-in forwards; }
+
+.onvs-toast-pos-top_center    .onvs-toast,
+.onvs-toast-pos-bottom_center .onvs-toast  { animation: onvsToastFromTop .28s ease-out; }
+.onvs-toast-pos-top_center    .onvs-toast.onvs-toast-closing,
+.onvs-toast-pos-bottom_center .onvs-toast.onvs-toast-closing { animation: onvsToastFade .22s ease-in forwards; }
+
+.onvs-toast-pos-middle .onvs-toast                    { animation: onvsToastScale .28s ease-out; }
+.onvs-toast-pos-middle .onvs-toast.onvs-toast-closing { animation: onvsToastFade .22s ease-in forwards; }
+
+/* ── progress bar ── */
+.onvs-toast-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    border-radius: 0 0 2px 2px;
+    transition: width var(--onvs-toast-dur, 4000ms) linear;
+}
+
+/* ── warna per type ── */
+.onvs-toast-success { border-color: #2ab57d; }
+.onvs-toast-success .onvs-toast-icon    { background: rgba(42,181,125,.12); color: #2ab57d; }
+.onvs-toast-success .onvs-toast-bar     { background: #2ab57d; }
+.onvs-toast-success .onvs-toast-message { color: #2ab57d; }
+
+.onvs-toast-info    { border-color: #4ba6ef; }
+.onvs-toast-info    .onvs-toast-icon    { background: rgba(75,166,239,.12); color: #4ba6ef; }
+.onvs-toast-info    .onvs-toast-bar     { background: #4ba6ef; }
+.onvs-toast-info    .onvs-toast-message { color: #4ba6ef; }
+
+.onvs-toast-warning { border-color: #ffbf53; }
+.onvs-toast-warning .onvs-toast-icon    { background: rgba(255,191,83,.12); color: #b3863a; }
+.onvs-toast-warning .onvs-toast-bar     { background: #ffbf53; }
+.onvs-toast-warning .onvs-toast-message { color: #b3863a; }
+
+.onvs-toast-danger  { border-color: #fd625e; }
+.onvs-toast-danger  .onvs-toast-icon    { background: rgba(253,98,94,.12); color: #fd625e; }
+.onvs-toast-danger  .onvs-toast-bar     { background: #fd625e; }
+.onvs-toast-danger  .onvs-toast-message { color: #fd625e; }
+
+/* ── icon wrap ── */
+.onvs-toast-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.onvs-toast-icon svg { width: 19px; height: 19px; }
+
+.onvs-toast-no-icon .onvs-toast-icon { display: none; }
+
+/* ── teks ── */
+.onvs-toast-body {
+    flex: 1;
+    min-width: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.onvs-toast-message {
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.onvs-toast-sub {
+    font-size: 12px;
+    color: #74788d;
+    margin-top: 3px;
+    line-height: 1.45;
+}
+
+/* ── tombol close ── */
+.onvs-toast-close {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #adb5bd;
+    padding: 0;
+    transition: background .15s, color .15s;
+}
+
+.onvs-toast-close:hover {
+    background: #f3f4f6;
+    color: #343a40;
+}
+
+.onvs-toast-close svg { width: 14px; height: 14px; }
+
+/* ── keyframes ── */
+@keyframes onvsToastFromRight {
+    from { transform: translateX(110%); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes onvsToastToRight {
+    from { transform: translateX(0);    opacity: 1; }
+    to   { transform: translateX(110%); opacity: 0; }
+}
+@keyframes onvsToastFromLeft {
+    from { transform: translateX(-110%); opacity: 0; }
+    to   { transform: translateX(0);     opacity: 1; }
+}
+@keyframes onvsToastToLeft {
+    from { transform: translateX(0);     opacity: 1; }
+    to   { transform: translateX(-110%); opacity: 0; }
+}
+@keyframes onvsToastFromTop {
+    from { transform: translateY(-20px); opacity: 0; }
+    to   { transform: translateY(0);     opacity: 1; }
+}
+@keyframes onvsToastScale {
+    from { transform: scale(.8); opacity: 0; }
+    to   { transform: scale(1);  opacity: 1; }
+}
+@keyframes onvsToastFade {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* ── responsive ── */
+@media (max-width: 480px) {
+    .onvs-toast-container { width: calc(100vw - 24px); }
+    .onvs-toast-pos-top_left,
+    .onvs-toast-pos-top_center,
+    .onvs-toast-pos-top_right    { top: 12px; left: 12px; right: 12px; transform: none; }
+    .onvs-toast-pos-bottom_left,
+    .onvs-toast-pos-bottom_center,
+    .onvs-toast-pos-bottom_right { bottom: 12px; left: 12px; right: 12px; transform: none; }
+    .onvs-toast-pos-middle       { top: 50%; left: 12px; right: 12px; transform: translateY(-50%); }
+}
